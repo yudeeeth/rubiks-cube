@@ -1,21 +1,15 @@
-#include<bits/stdc++.h>
-
+#include "rotations.hpp"
 using namespace std;
 
-enum colors {
-    white,
-    yellow,
-    orange,
-    red,
-    blue,
-    green,
-};
-
-class piece {
+class cube {
+    private:
+        string cube_;
     public:
-    colors color;
+        cube(string initState) {
+            
+        }
 };
 
 int main () {
-    vector<piece> edges;
+    string cube(initState);
 }
