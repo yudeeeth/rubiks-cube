@@ -1,6 +1,17 @@
 let log = (anything) => {
-  process.stdout.write(anything);
+  process.stdout.write("" + anything);
+  // console.log(anything);
 };
+
+class timer {
+  timer_;
+  constructor() {
+    this.timer = process.hrtime.bigint();
+  }
+  getElapsedTime() {
+    return (process.hrtime.bigint() - this.timer).toString();
+  }
+}
 
 class cube {
   colors = ["w", "y", "o", "r", "b", "g"];
@@ -190,31 +201,49 @@ class cube {
       rows.forEach((row) => {
         faceRow.forEach((face) =>
           row.forEach((rowElem) => {
-            if (face.length == 0) log("  ");
+            if (face.length == 0) {
+              log("  ");
+              // * enable this comment to print c++ related info
+              // log("-1,");
+            }
             else {
               let arrToPrint = this.cubeStructure.faces[face];
+              // console.log(arrToPrint,this.encodeMap);
               if (rowElem[0] == "c") {
                 log(this.cube.vertices[arrToPrint[rowElem[1]]]);
+                // * enable this comment to print c++ related info
+                // log(this.encodeMap.vertices[arrToPrint[rowElem[1]]]);
               }
               if (rowElem[0] == "e") {
                 log(this.cube.edges[arrToPrint[rowElem[1]]]);
+                // * enable this comment to print c++ related info
+                // log(this.encodeMap.edges[arrToPrint[rowElem[1]]]);
               }
               if (rowElem[0] == "f") {
                 log(this.cube.cores[face]);
+                // * enable this comment to print c++ related info
+                // log(this.encodeMap.cores[face]);
               }
               log(" ");
+              // * enable this comment to print c++ related info
+              // log(",");
             }
           })
         );
         log("\n");
+        // * enable this comment to print c++ related info
+        // log("},{\n");
       });
     });
   }
 }
 
 let c = new cube();
+// log(11);
+let t = new timer();
 c.applyMoves("f2 l2 u r2 u l2 d2 f2 u' l2 u f' u r d r' f2 d' u2 l'");
 c.applyMoves("u' r' l' u2 b2 l' u2 r' b' u' l b2 d2 b2 u l2 u r2 u'");
+console.log(t.getElapsedTime());
 // * enable this comment to print c++ related info
 // c.applyMoves("u u' u2 l l' l2 f f' f2 r r' r2 b b' b2 d d' d2");
 c.printCube();
