@@ -277,7 +277,7 @@ string initState = {
     'w', 'w', 'w', 'w', 'o', 'o', 'o', 'o',
     'g', 'g', 'g', 'g', 'r', 'r', 'r', 'r',
     'b', 'b', 'b', 'b', 'y', 'y', 'y', 'y',
-    'w', 'o', 'g', 'r', 'b', 'y'};
+};
 
 vector<string> moves = {
     "u", "u'", "u2", "l", "l'", "l2", "f", "f'", "f2",

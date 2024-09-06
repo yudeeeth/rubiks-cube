@@ -88,14 +88,34 @@ class cubeImpl {
                 cout<<"\n";
             }
         }
+
         bool isSolved() {
             return cube_==initState;
+        }
+        // kociemba solution
+        string bufferCube;
+        bool isBufferSolved() {
+
+        }
+        // Store only 20 g1s with reducing number of moves
+        // try to get to g1 in 15 moves or so
+        vector<vector<int>> g1s;
+        // returns if cube is in g1 state
+        bool isG1() {
+            // nees to be bery bast
+            // have set of edge pairs and corner triplets and ensure non of the conrner triplets have the right piece
+        }
+        vector<string> states;
+        void solve() {
+            // get current state from g1s by just going thru solutions, 
+            // use parent - u,d,f2,r2,l2,b2 to solve
+            // search max depth of 12 with bfs
         }
 };
 
 int main () {
     cubeImpl cube(initState);
-    string moves = "f2 l2 u r2 u l2 d2 f2 u' l2 u f' u2 l' u' r' l' u2 b2 l'";
+    string moves = "f2";
     auto arr = cube.convertToMoves(moves);
     timer t;
     for(int i=0;i<100;i++)

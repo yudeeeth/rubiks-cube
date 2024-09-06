@@ -74,6 +74,7 @@ class cube {
     },
   };
   cube = {};
+  bufferCube = [];
   encodeMap = {};
   constructor() {
     this.cubeStructure.prep();
@@ -247,3 +248,13 @@ console.log(t.getElapsedTime());
 // * enable this comment to print c++ related info
 // c.applyMoves("u u' u2 l l' l2 f f' f2 r r' r2 b b' b2 d d' d2");
 c.printCube();
+
+/* 
+*kociemba
+To G1 in least amount, store multiple options as possible use any possible move set
+from G1 to solved cube, rememer the solutions, 
+g1 has
+
+less than this as the states which have the edges/corners in the correct location is not allowed.
+Generate all possible g2 and solve it off
+*/
