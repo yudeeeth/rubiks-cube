@@ -29,3 +29,20 @@ Once I implemented this and was happy with the implementation and everything wor
 
 I will probably first implement this in js and then do it in c++ for the ease of development. I will try my best to not use a new representation but then the implmentation seems ugly, but will have to see.
 
+The best way to keep a calm mind and overcome this blockers is to, first, use existing code to make the base code for the required respresentation system.
+
+You need absolute understanding of this algorithm and these steps
+ -[x]  Introduction
+ -[x]  The Facelet Level
+ -[x]  The Cubie Level
+ -[x]  The Coordinate Level
+ -[x]  Equivalent Cubes and Symmetry
+ -[-]  Cosets
+ -[-]  Coordinates and Symmetry
+ -[-]  The Two-Phase Algorithm Coordinates
+ -[ ]  Move Tables
+ -[ ]  Pruning Tables
+ -[ ]  Details of the Two-Phase Algorithm
+ -[ ]  Optimal Solvers
+ -[ ]  Symmetric Patterns
+

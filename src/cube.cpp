@@ -54,7 +54,7 @@ class cubeImpl {
                         continue;
                     }
                     else {
-                        moves.push_back(movesToInt[seq.substr(i,2)]);
+                        moves.push_back(movesToInt[seq.substr(i,1)]);
                     }
                 }
             }
@@ -92,34 +92,23 @@ class cubeImpl {
         bool isSolved() {
             return cube_==initState;
         }
-        // kociemba solution
-        string bufferCube;
-        bool isBufferSolved() {
-
-        }
-        // Store only 20 g1s with reducing number of moves
-        // try to get to g1 in 15 moves or so
-        vector<vector<int>> g1s;
-        // returns if cube is in g1 state
-        bool isG1() {
-            // nees to be bery bast
-            // have set of edge pairs and corner triplets and ensure non of the conrner triplets have the right piece
-        }
-        vector<string> states;
-        void solve() {
-            // get current state from g1s by just going thru solutions, 
-            // use parent - u,d,f2,r2,l2,b2 to solve
-            // search max depth of 12 with bfs
-        }
 };
 
 int main () {
     cubeImpl cube(initState);
-    string moves = "f2";
-    auto arr = cube.convertToMoves(moves);
+    ifstream f(R"(C:\Users\udithkumarv\projects\cube\src\inp.txt)");
+    int n;
+    f>>n;
+    vector<vector<int>> movesInt(n);
+    for(int i=0;i<n;i++){
+        string move;
+        getline(f,move);
+        movesInt[i] = cube.convertToMoves(move);
+    }
     timer t;
-    for(int i=0;i<100;i++)
-    cube.apply(arr);
-    cout<<t.GetTimeElapsed()<<"\n";
+    for(int i=0;i<n;i++){
+        cube.apply(movesInt[i]);
+    }
+    std::cout<<t.GetTimeElapsed()<<"\n";
     cube.printCube();
 }

@@ -277,6 +277,7 @@ string initState = {
     'w', 'w', 'w', 'w', 'o', 'o', 'o', 'o',
     'g', 'g', 'g', 'g', 'r', 'r', 'r', 'r',
     'b', 'b', 'b', 'b', 'y', 'y', 'y', 'y',
+    'w', 'o', 'g', 'r', 'b', 'y',
 };
 
 vector<string> moves = {
@@ -376,3 +377,16 @@ vector<vector<int>> printIndices = {{
                                        22,
                                        46,
                                    }};
+
+vector<pair<char,char>> udSliceColors = {
+    {'g','r'},
+    {'g','o'},
+    {'b','r'},
+    {'b','o'}
+};
+vector<pair<int,int>> udSlicePositions = {
+    {5,11},
+    {7,17},
+    {9,15},
+    {13,19},
+};
