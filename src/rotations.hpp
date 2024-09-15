@@ -378,15 +378,276 @@ vector<vector<int>> printIndices = {{
                                        46,
                                    }};
 
-vector<pair<char,char>> udSliceColors = {
-    {'g','r'},
-    {'g','o'},
-    {'b','r'},
-    {'b','o'}
+vector<int> udSliceRedOrange = {
+    5,7,13,15
 };
-vector<pair<int,int>> udSlicePositions = {
-    {5,11},
-    {7,17},
-    {9,15},
-    {13,19},
+
+vector<int> udSliceGreenBlue = {
+    9,11,17,19
+};
+
+vector<int> nonUdWhiteYellow = {
+    0,1,2,3,24,25,26,27,20,21,22,23,44,45,46,47
+};
+
+vector<int> inverseMoves = {
+    1,0,2,4,3,5,7,6,8,10,9,11,13,12,14,16,15,17
+};
+
+
+class timer {
+    chrono::_V2::system_clock::time_point start;
+    public:
+    timer(){
+        start = chrono::high_resolution_clock::now();
+    }
+    uint64_t GetTimeElapsed() {
+        auto duration = chrono::duration_cast<chrono::microseconds>(chrono::high_resolution_clock::now()-start);
+        return static_cast<uint64_t>(duration.count());
+    }
+};
+
+class cubeImpl {
+    private:
+        string cube_;
+        map<int,string> lettermap;
+        map<string,vector<int>> possibleSolutions;
+    public:
+        cubeImpl(string initState) {
+            std::cout<<"cubeinit";
+            cube_ = initState;
+            for(int i=0;i<moves.size();i++){
+                movesToInt[moves[i]]=i;
+                lettermap[i] = moves[i];
+            }
+            populatePossibleSol();
+            std::cout<<"cube init: ";
+            printCube();
+        }
+
+        void populatePossibleSol() {
+            std::cout<<"popSol";
+            vector<int> sols;
+            int depth = 6;
+            vector<int> moves = {0,1,5,8,11,14,15,16};
+            possibleSolutions[cube_] = {};
+            for(auto i:moves){
+                sols.push_back(inverseMoves[i]);
+                popSol(i,depth,sols,moves);
+                sols.pop_back();
+            }
+        }
+
+        void popSol(int move,int depth,vector<int>& sols,vector<int>& moves) {
+            if(depth<0) return;
+            rotate(move);
+            possibleSolutions[cube_]=vector<int>(sols);
+            for(int i:moves){
+                if(i!=inverseMoves[move]) {
+                    if(i==move && sols.size()>=2 && sols[sols.size()-2]==i) continue;
+                    sols.push_back(inverseMoves[i]);
+                    popSol(i,depth-1,sols,moves);
+                    sols.pop_back();
+                }
+            }
+            rotate(inverseMoves[move]);
+        }
+
+        void rotateInternal(vector<int>& items){
+            auto temp = cube_[items[3]];
+            cube_[items[3]] = cube_[items[2]];
+            cube_[items[2]] = cube_[items[1]];
+            cube_[items[1]] = cube_[items[0]];
+            cube_[items[0]] = temp;
+        }
+
+        void rotate(int move) {
+            for(auto &seq : rotations[move]){
+                rotateInternal(seq);
+            }
+        }
+        void rotate(string &move) {
+            rotate(movesToInt[move]);
+        }
+
+        vector<int> convertToMoves(string &seq) {
+            vector<int> moves;
+            for(int i=0;i<seq.size();i++) {
+                if(seq[i]==' ') continue;
+                else if (movesToInt.count(seq.substr(i,1))) {
+                    if(i+1<seq.size() && seq[i+1]!=' ') {
+                        moves.push_back(movesToInt[seq.substr(i,2)]);
+                        i++;
+                        continue;
+                    }
+                    else {
+                        moves.push_back(movesToInt[seq.substr(i,1)]);
+                    }
+                }
+            }
+            return moves;
+        }
+
+        void apply(vector<int>& moves){
+            for(auto move:moves){
+                rotate(move);
+            }
+        }
+
+        void apply(string &seq){
+            auto vec = convertToMoves(seq);
+            apply(vec);
+        }
+
+        void apply(vector<string> &moves){
+            for(auto move:moves){
+                rotate(move);
+            }
+        }
+        void printCube(string cube = "") {
+            if(cube.size()==0) cube = cube_;
+            for(auto &row : printIndices) {
+                for(auto index : row) {
+                    if(index!=-1)
+                        cout<<cube[index]<<" ";
+                    else
+                        cout<<"  ";
+                }
+                cout<<"\n";
+            }
+        }
+
+        bool isSolved() {
+            return cube_==initState;
+        }
+
+        bool isSolved(string cube) {
+            return cube==initState;
+        }
+
+        bool isPossibleSol() {
+            return possibleSolutions.count(cube_);
+        }
+
+        bool isG1() {
+            for(int i:udSliceGreenBlue) {
+                if(cube_[i]!='b' && cube_[i]!='g') return false;
+            }
+            for(int i:udSliceRedOrange) {
+                if(cube_[i]!='o' && cube_[i]!='r') return false;
+            }
+            for(int i:nonUdWhiteYellow) {
+                if(cube_[i]!='w' && cube_[i]!='y') return false;
+            }
+            return true;
+        }
+
+        void solve() {
+            std::cout<<"solving\n";
+            vector<int> stage1moves = {0,1,3,4,6,7,9,10,12,13,15,16};
+            vector<int> stage2moves = {0,1,5,8,11,14,15,16};
+            vector<int> currentSolution  = {};
+            currentSolution.reserve(20);
+            vector<int> solution = {};
+            vector<string> g1cubes;
+            timer t;
+            int stage = 1;
+            int depth = 0;
+            int maxDepth = 10;
+            // Iterative Deepening
+            while(depth<=maxDepth){
+                std::cout<<"Depth: "<<depth<<"\n";
+                for(auto i: stage1moves) {
+                    currentSolution.push_back(i);
+                    solveInternal(i,stage1moves,depth,stage,g1cubes,solution,currentSolution);
+                    currentSolution.pop_back();
+                }
+                if(g1cubes.size()>0) break;
+                depth++;
+            }
+            std::cout<<"Printing g1 cubes:\n";
+            std::cout<<"Time Elapsed for generating "<<g1cubes.size()<<" G1 cubes: "<<t.GetTimeElapsed()<<"\n";
+            std::cout<<"printing g1:\n";
+            for(auto cube:g1cubes) {
+                printCube(cube);
+                std::cout<<"\n";
+            }
+            // change cube state
+            if(g1cubes.size()<=0) {
+                std::cout<<"No solution bro :(\n";
+                return;
+            }
+            cout<<"\n";
+            for(auto i: solution){
+                std::cout<<lettermap[i];
+            }
+            std::cout<<"\nstarting phase 2\n";
+            stage = 2;
+            cube_ = g1cubes[0];
+            depth = 8;
+            currentSolution.clear();
+            for(auto i:stage2moves) {
+                currentSolution.push_back(i);
+                solveInternal(i,stage2moves,depth,stage,g1cubes,solution,currentSolution);
+                currentSolution.pop_back();
+            }
+            std::cout<<"printing cube state:\n";
+            printCube();
+            std::cout<<"printing solution:\n";
+            for(auto i:solution) {
+                std::cout<<lettermap[i]<<" ";
+            }
+            char d;
+            std::cout<<"\n Did this work??? type y or n\n";
+            std::cin>>d;
+            if(d=='y')
+                std::cout<<"\nLets goooooooooo you did it, you are the goattttt. Take a pat you divine genius.\n";
+            else
+                std::cout<<"\nIts fine, you can fix this, lets do thisssss!!!!!!!!\n";
+        }
+
+        // failure on actual solves coz using dfs
+        void solveInternal(int move, vector<int>& moves,int depth, int stage, vector<string> &g1cubes, vector<int> &solution, vector<int>&currentSolution) {
+            if(depth<0) return;
+            if(stage==1 && g1cubes.size()>0) return;
+            if(stage==2 && g1cubes.size()==0) return;
+            rotate(move);
+            if(stage == 1 && isG1()){
+                std::cout<<"found 1 g\n";
+                g1cubes.push_back(string(cube_));
+                for(auto i:currentSolution){
+                    solution.push_back(i);
+                }
+                currentSolution.pop_back();
+                rotate(inverseMoves[move]);
+                return;
+            }
+            if(stage==2 && isPossibleSol()){
+                std::cout<<"Solved baby!!!!!!\n";
+                for(auto i:currentSolution){
+                    solution.push_back(i);
+                }
+                auto additional = possibleSolutions[cube_];
+                printCube();
+                for(auto i: additional){
+                    std::cout<<lettermap[i];
+                }
+                cout<<"\n";
+                for(int i=additional.size()-1;i>=0;i--){
+                    solution.push_back(additional[i]);
+                }
+                g1cubes.clear();
+                return;
+            }
+            for(auto i: moves) {
+                if(i!=inverseMoves[move])
+                {
+                    if(i==move && currentSolution.size()>=2 && currentSolution[currentSolution.size()-2]==i) continue;
+                    currentSolution.push_back(i);
+                    solveInternal(i,moves,depth-1,stage,g1cubes,solution,currentSolution);
+                    currentSolution.pop_back();
+                }
+            }
+            rotate(inverseMoves[move]);
+        }
 };

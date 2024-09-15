@@ -46,3 +46,43 @@ You need absolute understanding of this algorithm and these steps
  -[ ]  Optimal Solvers
  -[ ]  Symmetric Patterns
 
+## First Implementation
+
+A naive implementation of the kociemba algorithm can be applied with the basic understanding of kociemba algorithm and a few tricks.
+The basic undestanding is that:
+
+Step 1: Reduce the cube to g1
+Step 2: Reduce the cube from g1 to solved state using <u,u',r2,f2,l2,b2,d,d'>
+
+The reason is that all cubes in g1 are reduced to dominoes (3x3x2) and dominoes can be solved in with only those movesets.
+There are a few tiny optimisations you can do to speed this up.
+
+For the second half, you can store states from the solved state back to about n moves. This is quick. And these saved states can be used to reach the solution quickly, as now you are not looking for solved state but just any of these states.
+
+For the first stage, instead of looking directly in a depth first manner (bfs is insane as will be holding a lotttt of states). you can do iterative deeping which ensures that there is no shorter way to reach g1, and it doesnt cost you much just doublt the time it normally takes.
+
+Without using any special respresentation, and only using the facelet level rep that is implemented so far, it is possible to solve the cube. note that this does not look for symmetries as well.
+
+With -Ofast flag to ensure the the most optimised code, with the above naive implementation of kociemba in c++, we can solve most cubes within a day (untested lol). I ran a single test using this scramble:
+
+f2 l2 u r2 u l2 d2 f2 u' l2 u f' u r d r' f2 d' u2 l'
+
+Which the algorithm solved as
+
+d' r d l' r' b r r d b u l2 d f2 l2 u l2 u b2 u l2 b2 d b2 d' f2
+
+which took a depth of 10 to solve for g1, taking a total of 2711482801 microseconds (45 mins approx) for this.
+
+The second phase is really quick as we have a reverse mapping from the solved state, I wasnt paying attention to wether the code stopped running, and hence can only approcimate that this took about 200 seconds.
+
+Considering that I used -Ofast and got this kind of time. The naive version is really pathetic, but it makes me happy that i was able to implement this so far. I will be able to implment the ideal kociemba soon (fingers crossed).
+  
+Initially i assued checking for g1 would be very time consuming, but it turned out to be simple and hence I took the time to implement this and it was simple enough to implement in c++, so went ahead with it.
+
+### Disadvantages of naive approach.
+Its very obvious the disadvantages of this approach. But just to name a few
+
+- Storing the states as strings Is not veryyy efficient, altho I think it is space efficient as it only uses 48 bytes (1 per char)
+- This also take a longggg time to change state?? not sure about this just guessing
+- The lack of exploiting symmetries is also a huggge reason for the increased amount of time.
+- symmetries can also be applied to covert the mapping of solved to 6 depth all states to given scrambled state to 6 depth all possible states. If this is possible this reduces the time drastically.

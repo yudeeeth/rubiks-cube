@@ -1,3 +1,2 @@
-3
+2
 f2 l2 u r2 u l2 d2 f2 u' l2 u f' u r d r' f2 d' u2 l'
-u' r' l' u2 b2 l' u2 r' b' u' l b2 d2 b2 u l2 u r2 u'

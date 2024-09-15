@@ -242,7 +242,7 @@ class cube {
 let c = new cube();
 let t = new timer();
 c.applyMoves("f2 l2 u r2 u l2 d2 f2 u' l2 u f' u r d r' f2 d' u2 l'");
-c.applyMoves("u' r' l' u2 b2 l' u2 r' b' u' l b2 d2 b2 u l2 u r2 u'");
+// c.applyMoves("u' r' l' u2 b2 l' u2 r' b' u' l b2 d2 b2 u l2 u r2 u'");
 console.log(t.getElapsedTime());
 // * enable this comment to print c++ related info
 // c.applyMoves("u u' u2 l l' l2 f f' f2 r r' r2 b b' b2 d d' d2");
